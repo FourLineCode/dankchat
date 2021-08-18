@@ -1,8 +1,10 @@
+import 'package:flutter/rendering.dart';
+
 class TwitchUser {
-  String username;
-  String displayName;
-  String userId;
-  String userColor;
+  final String username;
+  final String displayName;
+  final String userId;
+  final Color userColor;
   bool moderator = false;
   bool subscriber = false;
 
