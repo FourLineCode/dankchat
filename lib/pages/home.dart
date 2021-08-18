@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    final client = TwitchService.connect(channel: 'valorant');
+    final client = TwitchService.connect(channel: 'forsen');
 
     client.on("message", (channel, userstate, message, self) {
       TwitchMessage msg =
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 250),
-        curve: Curves.fastOutSlowIn,
+        curve: Curves.easeIn,
       );
     });
   }
