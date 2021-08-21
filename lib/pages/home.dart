@@ -15,12 +15,13 @@ class _HomeState extends State<Home> {
   final List<TwitchMessage> _messages = [];
   final GlobalKey _messagesKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textInputController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    final client = TwitchService.connect(channel: 'forsen');
+    final client = TwitchService.connect(channel: 'lilypichu');
 
     client.on("message", (channel, userstate, message, self) {
       TwitchMessage msg =
@@ -34,11 +35,7 @@ class _HomeState extends State<Home> {
         }
       });
 
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeIn,
-      );
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
 
@@ -56,16 +53,40 @@ class _HomeState extends State<Home> {
             centerTitle: true,
             backgroundColor: Colors.black54),
         body: Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4.0),
           decoration: const BoxDecoration(color: Colors.black87),
-          child: ListView.builder(
-              itemCount: _messages.length,
-              key: _messagesKey,
-              controller: _scrollController,
-              itemBuilder: (BuildContext context, int index) {
-                final message = _messages[index];
-                return ChatMessage(message: message);
-              }),
+          width: double.infinity,
+          height: double.infinity,
+          child: Flex(
+            direction: Axis.vertical,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 4.0),
+                  child: ListView.builder(
+                      itemCount: _messages.length,
+                      key: _messagesKey,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      controller: _scrollController,
+                      itemBuilder: (BuildContext context, int index) {
+                        final message = _messages[index];
+                        return ChatMessage(message: message);
+                      }),
+                ),
+              ),
+              TextField(
+                controller: _textInputController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Send a message",
+                    hintStyle: TextStyle(color: Colors.white)),
+              )
+            ],
+          ),
         ));
   }
 }
